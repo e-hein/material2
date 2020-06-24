@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ENTER} from '@angular/cdk/keycodes';
+import {ENTER, TAB} from '@angular/cdk/keycodes';
 import {_supportsShadowDom} from '@angular/cdk/platform';
 import {
   ChangeDetectionStrategy,
@@ -94,6 +94,13 @@ export class TestMainComponent implements OnDestroy {
     }
     if (event.key === 'j' && event.altKey) {
       this.specialKey = 'alt-j';
+    }
+    if (event.keyCode === TAB && event.key === 'Tab') {
+      if (event.shiftKey) {
+        this.specialKey = 'shift-tab';
+      } else {
+        this.specialKey = 'tab';
+      }
     }
   }
 

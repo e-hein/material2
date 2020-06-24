@@ -7,17 +7,9 @@
  */
 
 import {ModifierKeys} from '@angular/cdk/testing';
-import {dispatchFakeEvent, dispatchKeyboardEvent} from './dispatch-events';
+import {dispatchKeyboardEvent} from './dispatch-events';
 import {triggerFocus} from './element-focus';
-
-/**
- * Checks whether the given Element is a text input element.
- * @docs-private
- */
-export function isTextInput(element: Element): element is HTMLInputElement | HTMLTextAreaElement {
-  const nodeName = element.nodeName.toLowerCase();
-  return nodeName === 'input' || nodeName === 'textarea' ;
-}
+import {isTextInput, simulateKeyInTextInput, clearTextInput} from './type-in-text-input';
 
 /**
  * Focuses an input, sets its value and dispatches
@@ -56,13 +48,14 @@ export function typeInElement(element: HTMLElement, ...modifiersAndKeys: any) {
           k.split('').map(c => ({keyCode: c.toUpperCase().charCodeAt(0), key: c})) : [k])
       .reduce((arr, k) => arr.concat(k), []);
 
-  triggerFocus(element);
+  if (document.activeElement !== element) {
+    triggerFocus(element);
+  }
   for (const key of keys) {
     dispatchKeyboardEvent(element, 'keydown', key.keyCode, key.key, element, modifiers);
     dispatchKeyboardEvent(element, 'keypress', key.keyCode, key.key, element, modifiers);
-    if (isTextInput(element) && key.key && key.key.length === 1) {
-      element.value += key.key;
-      dispatchFakeEvent(element, 'input');
+    if (isTextInput(element) && key.key) {
+      simulateKeyInTextInput(element, key.key, modifiers);
     }
     dispatchKeyboardEvent(element, 'keyup', key.keyCode, key.key, element, modifiers);
   }
@@ -71,9 +64,9 @@ export function typeInElement(element: HTMLElement, ...modifiersAndKeys: any) {
 /**
  * Clears the text in an input or textarea element.
  * @docs-private
+ * @deprecated use clearTextInput
+ * @breaking-change 10.0.0-rc.2
  */
 export function clearElement(element: HTMLInputElement | HTMLTextAreaElement) {
-  triggerFocus(element as HTMLElement);
-  element.value = '';
-  dispatchFakeEvent(element, 'input');
+  clearTextInput(element);
 }

@@ -3,7 +3,8 @@ import {
   ComponentHarness,
   ComponentHarnessConstructor,
   HarnessLoader,
-  TestElement
+  TestElement,
+  TestKey,
 } from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {async, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
@@ -211,6 +212,18 @@ describe('TestbedHarnessEnvironment', () => {
       expect(await specialKey.text()).toBe('alt-j');
     });
 
+    it('should send tab key', async () => {
+      const specialKey = await harness.specaialKey();
+      await harness.sendTab();
+      expect(await specialKey.text()).toBe('tab');
+    });
+
+    it('should send shift-tab key', async () => {
+      const specialKey = await harness.specaialKey();
+      await harness.sendShiftTab();
+      expect(await specialKey.text()).toBe('shift-tab');
+    });
+
     it('should load required harness with ancestor selector restriction', async () => {
       const subcomp = await harness.requiredAncestorRestrictedSubcomponent();
       expect(await (await subcomp.title()).text()).toBe('List of other 1');
@@ -322,6 +335,49 @@ describe('TestbedHarnessEnvironment', () => {
       const input = await harness.input();
       await input.sendKeys('Yi');
       expect(await input.getAttribute('id')).toBe(document.activeElement!.id);
+    });
+
+    describe('emulate backspace', () => {
+      const initialValue = 'abc';
+      let input: TestElement;
+      let value: TestElement;
+
+      beforeEach(async () => {
+        input = await harness.input();
+        value = await harness.value();
+        await input.sendKeys(initialValue);
+      });
+
+      it('should have initial value before backspace', async () => {
+        expect(await input.getProperty('value')).toBe(initialValue);
+        expect(await value.text()).toBe('Input: ' + initialValue);
+      });
+
+      it('should remove one character from input', async () => {
+        await input.sendKeys(TestKey.BACKSPACE);
+        const expectedValue = initialValue.substr(0, initialValue.length - 1);
+        expect(await input.getProperty('value')).toBe(expectedValue);
+        expect(await value.text()).toBe('Input: ' + expectedValue);
+      });
+
+      it('should ignore too many backspaces', async () => {
+        const tooManyBackspaces = Array.from(initialValue + ' and some more')
+          .map(() => TestKey.BACKSPACE);
+        await input.sendKeys(...tooManyBackspaces);
+        expect(await input.getProperty('value')).toBe('');
+      });
+
+      it('should respect selection', async () => {
+        await input.sendKeys({ shift: true }, TestKey.LEFT_ARROW, TestKey.LEFT_ARROW);
+        await input.sendKeys(TestKey.BACKSPACE);
+        expect(await input.getProperty('value')).toBe('a');
+      });
+
+      it('when all selected should remove all', async () => {
+        await input.sendKeys({ shift: true }, TestKey.UP_ARROW);
+        await input.sendKeys(TestKey.BACKSPACE);
+        expect(await input.getProperty('value')).toBe('');
+      });
     });
 
     it('should be able to retrieve dimensions', async () => {

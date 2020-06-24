@@ -5,7 +5,7 @@ import {_supportsShadowDom} from '@angular/cdk/platform';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
   MockNgZone,
-  clearElement,
+  clearTextInput,
   createKeyboardEvent,
   dispatchEvent,
   dispatchFakeEvent,
@@ -232,7 +232,7 @@ describe('MatAutocomplete', () => {
       // Changing value from 'Alabama' to 'al' to re-populate the option list,
       // ensuring that 'California' is created new.
       dispatchFakeEvent(input, 'focusin');
-      clearElement(input);
+      clearTextInput(input);
       typeInElement(input, 'al');
       fixture.detectChanges();
       tick();
@@ -378,7 +378,7 @@ describe('MatAutocomplete', () => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
 
-      clearElement(input);
+      clearTextInput(input);
       typeInElement(input, 'al');
       fixture.detectChanges();
       tick();
@@ -687,7 +687,7 @@ describe('MatAutocomplete', () => {
         options[1].click();
         fixture.detectChanges();
 
-        clearElement(input);
+        clearTextInput(input);
         typeInElement(input, 'Californi');
         fixture.detectChanges();
         tick();
@@ -1027,7 +1027,7 @@ describe('MatAutocomplete', () => {
           .toEqual('', `Expected panel to close after ENTER key.`);
 
       dispatchFakeEvent(input, 'focusin');
-      clearElement(input);
+      clearTextInput(input);
       typeInElement(input, 'Alabama');
       fixture.detectChanges();
       tick();
@@ -1641,7 +1641,7 @@ describe('MatAutocomplete', () => {
       fixture.detectChanges();
 
       // Change the text so we get more than one result.
-      clearElement(inputEl);
+      clearTextInput(inputEl);
       typeInElement(inputEl, 'C');
       fixture.detectChanges();
       tick();
@@ -1991,7 +1991,7 @@ describe('MatAutocomplete', () => {
       expect(Math.floor(inputBottom)).toBe(Math.floor(panelTop),
           `Expected panel top to match input bottom when there is only one option.`);
 
-      clearElement(input);
+      clearTextInput(input);
       fixture.detectChanges();
       tick();
       fixture.detectChanges();

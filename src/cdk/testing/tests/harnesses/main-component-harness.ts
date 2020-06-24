@@ -112,6 +112,14 @@ export class MainComponentHarness extends ComponentHarness {
     return (await this.input()).sendKeys({alt: true}, 'j');
   }
 
+  async sendTab(): Promise<void> {
+    return (await this.input()).sendKeys(TestKey.TAB);
+  }
+
+  async sendShiftTab(): Promise<void> {
+    return (await this.input()).sendKeys({shift: true}, TestKey.TAB);
+  }
+
   async getTaskStateResult(): Promise<string> {
     await (await this.taskStateTestTrigger()).click();
     // Wait for async tasks to complete since the click caused a

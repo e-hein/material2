@@ -9,7 +9,7 @@
 import * as keyCodes from '@angular/cdk/keycodes';
 import {ElementDimensions, ModifierKeys, TestElement, TestKey} from '@angular/cdk/testing';
 import {
-  clearElement,
+  clearTextInput,
   dispatchMouseEvent,
   dispatchPointerEvent,
   isTextInput,
@@ -67,7 +67,7 @@ export class UnitTestElement implements TestElement {
     if (!isTextInput(this.element)) {
       throw Error('Attempting to clear an invalid element');
     }
-    clearElement(this.element);
+    clearTextInput(this.element);
     await this._stabilize();
   }
 
