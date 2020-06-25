@@ -12,10 +12,23 @@ import {FormsModule} from '@angular/forms';
 import {TestMainComponent} from './test-main-component';
 import {TestShadowBoundary, TestSubShadowBoundary} from './test-shadow-boundary';
 import {TestSubComponent} from './test-sub-component';
+import {TestTabComponent} from './test-tab-component';
 
 @NgModule({
   imports: [CommonModule, FormsModule],
-  declarations: [TestMainComponent, TestSubComponent, TestShadowBoundary, TestSubShadowBoundary],
-  exports: [TestMainComponent, TestSubComponent, TestShadowBoundary, TestSubShadowBoundary]
+  declarations: [
+    TestMainComponent,
+    TestSubComponent,
+    TestShadowBoundary,
+    TestSubShadowBoundary,
+    TestTabComponent,
+  ],
+  exports: [
+    TestMainComponent,
+    TestSubComponent,
+    TestShadowBoundary,
+    TestSubShadowBoundary,
+    TestTabComponent,
+  ]
 })
 export class TestComponentsModule {}

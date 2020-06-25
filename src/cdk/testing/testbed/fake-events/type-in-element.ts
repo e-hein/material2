@@ -10,6 +10,7 @@ import {ModifierKeys} from '@angular/cdk/testing';
 import {dispatchKeyboardEvent} from './dispatch-events';
 import {triggerFocus} from './element-focus';
 import {isTextInput, simulateKeyInTextInput, clearTextInput} from './type-in-text-input';
+import {emulateTab} from './emulate-tab';
 
 /**
  * Focuses an input, sets its value and dispatches
@@ -52,12 +53,17 @@ export function typeInElement(element: HTMLElement, ...modifiersAndKeys: any) {
     triggerFocus(element);
   }
   for (const key of keys) {
-    dispatchKeyboardEvent(element, 'keydown', key.keyCode, key.key, element, modifiers);
-    dispatchKeyboardEvent(element, 'keypress', key.keyCode, key.key, element, modifiers);
-    if (isTextInput(element) && key.key) {
-      simulateKeyInTextInput(element, key.key, modifiers);
+    if (key.key === 'Tab') {
+      console.log('tab key found');
+      element = emulateTab(modifiers);
+    } else {
+      dispatchKeyboardEvent(element, 'keydown', key.keyCode, key.key, element, modifiers);
+      dispatchKeyboardEvent(element, 'keypress', key.keyCode, key.key, element, modifiers);
+      if (isTextInput(element) && key.key) {
+        simulateKeyInTextInput(element, key.key, modifiers);
+      }
+      dispatchKeyboardEvent(element, 'keyup', key.keyCode, key.key, element, modifiers);
     }
-    dispatchKeyboardEvent(element, 'keyup', key.keyCode, key.key, element, modifiers);
   }
 }
 

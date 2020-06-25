@@ -558,6 +558,35 @@ export function sharedCdkTestingSpecs(
           expect(await input.getProperty('value')).toBe('abdc');
         });
       });
+
+      describe('tab navigation', () => {
+        let firstInput: TestElement;
+        let secondInput: TestElement;
+
+        beforeEach(async () => {
+          firstInput = await harness.input();
+          secondInput = await harness.memo();
+        });
+
+        it('should change focus forwards', async () => {
+          await firstInput.sendKeys(TestKey.TAB);
+          expect(await secondInput.isFocused()).toBe(true);
+        });
+
+        it('should change focus backwards', async () => {
+          await secondInput.sendKeys({ shift: true}, TestKey.TAB);
+          expect(await firstInput.isFocused()).toBe(true);
+        });
+
+        it('should be able to delete and write in two fields', async () => {
+          await firstInput.sendKeys('Donald', TestKey.TAB, 'Jenkins');
+          await secondInput.sendKeys({ shift: true }, TestKey.TAB);
+          await firstInput.sendKeys('Leeroy');
+
+          expect(await firstInput.getProperty('value')).toBe('Leeroy');
+          expect(await secondInput.getProperty('value')).toBe('Jenkins');
+        });
+      });
     });
   });
 }

@@ -10,6 +10,8 @@ import {MainComponentHarness} from './harnesses/main-component-harness';
 import {sharedCdkTestingSpecs} from './shared/shared-specs';
 import {TestComponentsModule} from './test-components-module';
 import {TestMainComponent} from './test-main-component';
+import {TestTabComponent} from './test-tab-component';
+import {EmulateTab} from '../testbed/fake-events/emulate-tab';
 
 describe('TestbedHarnessEnvironment', () => {
   let fixture: ComponentFixture<{}>;
@@ -111,8 +113,51 @@ describe('TestbedHarnessEnvironment', () => {
     () => TestbedHarnessEnvironment.harnessForFixture(fixture, MainComponentHarness),
     () => Promise.resolve(document.activeElement!.id),
   ));
+
 });
 
-function activeElementText() {
-  return document.activeElement && (document.activeElement as HTMLElement).innerText || '';
-}
+describe('emulate tab', () => {
+  let fixture: ComponentFixture<{}>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({imports: [TestComponentsModule]}).compileComponents();
+    fixture = TestBed.createComponent(TestTabComponent);
+  });
+
+  it('should find expected inputs (and not hidden/disabled...)', () => {
+    const selectableElementIds = EmulateTab
+      .findSelectableElements()
+      .map((e) => e.id || e.className)
+    ;
+    expect(selectableElementIds).toEqual([
+      'input-with-tab-index-2',
+      'input2-with-tab-index-2',
+      'input-with-tab-index-3',
+      'input-with-tab-index-4',
+      'first-input',
+      'second-input',
+      'input-before-hidden-input',
+      'input-after-hidden-input',
+      'input-before-collapsed-input',
+      'input-after-collapsed-input',
+      'input-before-disabled-input',
+      'input-after-disabled-input',
+      'input-before-readonly-input',
+      'readonly-input',
+      'input-before-select',
+      'select',
+      'input-before-button',
+      'button',
+      'input-before-clickable-div',
+      'clickable-div',
+      'input-before-link',
+      'link-with-href',
+      'input-after-link-without-href',
+      'input-before-hidden-child-input',
+      'input-after-hidden-child-input',
+      'input-before-collapsed-child-input',
+      'input-after-collapsed-child-input',
+      'last-input',
+    ]);
+  });
+});
