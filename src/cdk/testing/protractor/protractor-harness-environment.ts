@@ -7,7 +7,9 @@
  */
 
 import {HarnessEnvironment, HarnessLoader, TestElement} from '@angular/cdk/testing';
-import {by, element as protractorElement, ElementArrayFinder, ElementFinder} from 'protractor';
+import {
+  by, element as protractorElement, ElementArrayFinder, ElementFinder, browser,
+} from 'protractor';
 import {ProtractorElement} from './protractor-element';
 
 /** Options to configure the environment. */
@@ -42,6 +44,14 @@ export class ProtractorHarnessEnvironment extends HarnessEnvironment<ElementFind
   async waitForTasksOutsideAngular(): Promise<void> {
     // TODO: figure out how we can do this for the protractor environment.
     // https://github.com/angular/components/issues/17412
+  }
+
+  async getActiveElement(): Promise<TestElement> {
+    const elements = new ElementArrayFinder(browser, () => Promise.all([
+      browser.switchTo().activeElement(),
+    ]));
+    const element = new ElementFinder(browser, elements);
+    return this.createTestElement(element);
   }
 
   protected getDocumentRoot(): ElementFinder {

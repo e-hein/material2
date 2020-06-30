@@ -109,6 +109,5 @@ describe('TestbedHarnessEnvironment', () => {
   describe('environment idependent', () => sharedCdkTestingSpecs(
     () => TestbedHarnessEnvironment.loader(fixture),
     () => TestbedHarnessEnvironment.harnessForFixture(fixture, MainComponentHarness),
-    () => Promise.resolve(document.activeElement!.id),
   ));
 });

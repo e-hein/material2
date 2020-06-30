@@ -101,6 +101,11 @@ export interface HarnessLoader {
    * @return A list instances of the given harness type.
    */
   getAllHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T[]>;
+
+  /**
+   * Returns the element that is currently focused.
+   */
+  getActiveElement(): Promise<TestElement>;
 }
 
 /**

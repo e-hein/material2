@@ -105,6 +105,11 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
     await this._taskState.pipe(takeWhile(state => !state.stable)).toPromise();
   }
 
+  async getActiveElement(): Promise<TestElement> {
+    await this.forceStabilize();
+    return this.createTestElement(document.activeElement || document.body);
+  }
+
   protected getDocumentRoot(): Element {
     return document.body;
   }

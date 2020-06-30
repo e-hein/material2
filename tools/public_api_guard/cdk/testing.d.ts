@@ -42,6 +42,7 @@ export declare abstract class HarnessEnvironment<E> implements HarnessLoader, Lo
     protected abstract createTestElement(element: E): TestElement;
     documentRootLocatorFactory(): LocatorFactory;
     abstract forceStabilize(): Promise<void>;
+    abstract getActiveElement(): Promise<TestElement>;
     getAllChildLoaders(selector: string): Promise<HarnessLoader[]>;
     getAllHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T[]>;
     protected abstract getAllRawElements(selector: string): Promise<E[]>;
@@ -58,6 +59,7 @@ export declare abstract class HarnessEnvironment<E> implements HarnessLoader, Lo
 }
 
 export interface HarnessLoader {
+    getActiveElement(): Promise<TestElement>;
     getAllChildLoaders(selector: string): Promise<HarnessLoader[]>;
     getAllHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T[]>;
     getChildLoader(selector: string): Promise<HarnessLoader>;

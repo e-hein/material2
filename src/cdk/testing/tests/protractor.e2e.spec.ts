@@ -71,7 +71,6 @@ describe('ProtractorHarnessEnvironment', () => {
   describe('environment idependent', () => sharedCdkTestingSpecs(
     () => ProtractorHarnessEnvironment.loader(),
     () => ProtractorHarnessEnvironment.loader().getHarness(MainComponentHarness),
-    async () => (await activeElement()).getAttribute('id'),
   ));
 });
 

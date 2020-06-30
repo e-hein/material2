@@ -31,9 +31,6 @@ import {SubComponentHarness, SubComponentSpecialHarness} from '../harnesses/sub-
 export function sharedCdkTestingSpecs(
   getHarnessLoaderFromEnvironment: () => HarnessLoader,
   getMainComponentHarnessFromEnvironment: () => Promise<MainComponentHarness>,
-  // Maybe we should introduce HarnessLoader.getActiveElement(): TestElement
-  // then this 3rd parameter could get removed.
-   getActiveElementId: () => Promise<string | null>,
 ) {
   describe('HarnessLoader', () => {
     let loader: HarnessLoader;
@@ -494,6 +491,14 @@ export function sharedCdkTestingSpecs(
       expect(await button.isFocused()).toBe(false);
     });
   });
+
+  async function getActiveElementId() {
+    return await (await getActiveElement()).getAttribute('id');
+  }
+
+  function getActiveElement() {
+    return getHarnessLoaderFromEnvironment().getActiveElement();
+  }
 }
 
 export async function checkIsElement(result: ComponentHarness | TestElement, selector?: string) {
