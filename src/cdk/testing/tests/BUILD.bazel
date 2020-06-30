@@ -11,6 +11,7 @@ ng_module(
             "**/*.spec.ts",
             "**/*.spec.d.ts",
             "harnesses/**",
+            "env-independent/**",
         ],
     ),
     assets = glob(["**/*.html"]),
@@ -30,15 +31,28 @@ ts_library(
 )
 
 ng_test_library(
+    name = "env_independent_specs",
+    srcs = glob(["env-independent/**/*.ts"]),
+    deps = [
+        ":test_harnesses",
+        "//src/cdk/testing",
+    ],
+)
+
+ng_test_library(
     name = "unit_test_sources",
     srcs = glob(
         [
             "**/*.spec.ts",
             "**/*.spec.d.ts",
         ],
-        exclude = ["**/*.e2e.spec.ts"],
+        exclude = [
+            "env-independent/**/*.ts",
+            "**/*.e2e.spec.ts",
+        ],
     ),
     deps = [
+        ":env_independent_specs",
         ":test_components",
         ":test_harnesses",
         "//src/cdk/platform",
@@ -57,6 +71,7 @@ ng_e2e_test_library(
         "**/*.spec.d.ts",
     ]),
     deps = [
+        ":env_independent_specs",
         ":test_harnesses",
         "//src/cdk/testing",
         "//src/cdk/testing/private",
